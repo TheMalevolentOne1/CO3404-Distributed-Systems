@@ -27,7 +27,7 @@ const getJoke = (number) =>
     }
 
     return jokes;
-}
+}2
 
 app.get("/getjoke", (req,res) => 
 {
