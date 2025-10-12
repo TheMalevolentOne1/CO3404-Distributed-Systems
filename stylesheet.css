@@ -1,0 +1,12 @@
+body {
+  font-family: sans-serif;
+  color: white;
+  margin: 0;
+  background-color: black;
+
+  display: flex;
+  flex-direction: column; /* stack items top-to-bottom */
+  justify-content:baseline; /* center vertically */
+  align-items: center; /* center horizontally */
+  height: 100vh; /* full viewport height */
+}
