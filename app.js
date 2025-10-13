@@ -27,14 +27,14 @@ const getJoke = (number) =>
     }
 
     return jokes;
-}2
+}
 
 app.get("/getjoke", (req,res) => 
 {
     res.send(`<h1>Future Documentation Page To Be Added.</h1><h2>GetJoke API Call</h2><p>localhost:3000/getjoke/number max jokes available: ${JOKES.length}</p>`);
 });
 
-app.get("/getjoke/all", ( req, res ) => 
+app.get("/getjoke/all", ( req, res ) =>
 {
     res.json(JOKES);
 });
@@ -43,28 +43,28 @@ app.get("/getjoke/:num", ( req, res ) =>
 {
     let num = parseInt(req.params.num);
 
-    if (JOKES.length == 0)
+    if (JOKES.length == 0) // Server has no jokes
     {
         res.status(500).send("<p style='color:red'>ERROR: No jokes available</p>");
         return;
     }
 
-    if (isNaN(num))
+    if (isNaN(num)) // Not a number
     {
         res.status(400).send(`<link rel="stylesheet" href="stylesheet.css"><p style='color:red'>ERROR: Not a <b>number</b></p>`);
         return;
     }
-    else if (num > JOKES.length)
+    else if (num > JOKES.length) // Greater than available jokes
     {
         res.status(400).send(`<link rel="stylesheet" href="stylesheet.css"><p style='color:red'>ERROR: Number cannot be <b>greater than ${JOKES.length}</b></p>`);
         return;
     }
-    else if (num < 1)
+    else if (num < 1) // Less than 1
     {
         res.status(400).send("<p style='color:red'>ERROR: Number cannot be <b>less than 1</b></p>");
         return;
     }
-    else
+    else // Valid number
     {
         res.json(getJoke(num));
         return;
