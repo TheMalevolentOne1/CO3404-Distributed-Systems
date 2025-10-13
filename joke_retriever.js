@@ -61,9 +61,9 @@ document.addEventListener('DOMContentLoaded', () =>
             const jokes = await fetch(`http://localhost:3000/getjoke/${numberInput.value}`).then(res => 
             { 
                 if (res.status == 200) return res.json();
+                ANSWERFIELD.innerHTML = "<p>Data Collected!</p>";
             }).catch(err => 
             {
-                ANSWERFIELD.innerHTML = "<p>Data Collected!</p>";
                 ANSWERFIELD.innerHTML = `<p style='color:red'>ERROR: ${err}</p>`;
                 return;
             });
