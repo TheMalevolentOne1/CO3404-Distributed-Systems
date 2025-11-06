@@ -2,6 +2,20 @@ const LOWEST_JOKE_AMOUNT = 1;
 const HIGHEST_JOKE_AMOUNT = 100;
 const ANSWERFIELD = document.getElementById('answer-field');
 
+const makeRequest = async (endpoint) =>
+{
+    try 
+    {
+        const response = await fetch(endpoint);
+        if (response.status !== 200) throw new Error(`HTTP error! status: ${response.status}`);
+        const data = await response.json();
+        return data;
+    } catch (error) 
+    {
+        console.error("Error fetching joke:", error);
+    }
+}
+
 const parse_jokes = (jokes) =>
 {
     if (jokes.length == 0) return;
@@ -50,7 +64,6 @@ document.addEventListener('DOMContentLoaded', () =>
 {
     var getJokeBtn = document.getElementById('get-joke');
     var getAllJokesBtn = document.getElementById('get-all-jokes');
-    var getSpecificJokeBtn = document.getElementById('get-specific-joke');
 
     const numberInput = document.getElementById('joke-num');
 
@@ -58,16 +71,9 @@ document.addEventListener('DOMContentLoaded', () =>
     {
         if (numberInput.value >= LOWEST_JOKE_AMOUNT && numberInput.value <= HIGHEST_JOKE_AMOUNT)
         {
-            const jokes = await fetch(`http://localhost:3000/getjoke/${numberInput.value}`).then(res => 
-            { 
-                if (res.status == 200) return res.json();
-                ANSWERFIELD.innerHTML = "<p>Data Collected!</p>";
-            }).catch(err => 
-            {
-                ANSWERFIELD.innerHTML = `<p style='color:red'>ERROR: ${err}</p>`;
-                return;
-            });
-            parse_jokes(jokes);
+            const jokes = await makeRequest(`http://localhost:3000/getjoke/${numberInput.value}`);
+            if (jokes) parse_jokes(jokes);
+            else ANSWERFIELD.innerHTML = "<p style='color:red'>ERROR: No jokes returned from server</p>";
         }
         else
         {
@@ -77,19 +83,8 @@ document.addEventListener('DOMContentLoaded', () =>
 
     getAllJokesBtn.addEventListener('click', async () =>
     {
-        const jokes = await fetch("http://localhost:3000/getjoke/all").then
-        (
-            res => res.json()
-        ).catch
-        (
-            err =>
-        {
-            ANSWERFIELD.innerHTML = "<p>Data Collected!</p>";
-            ANSWERFIELD.innerHTML = `<p style='color:red'>ERROR: ${err}</p>`;
-            return;
-        });
-
-        parse_jokes(jokes);
+        const jokes = await makeRequest("http://localhost:3000/getjoke/all");
+        if (jokes) parse_jokes(jokes);
+        else ANSWERFIELD.innerHTML = "<p style='color:red'>ERROR: No jokes returned from server</p>";
     });
 });
-        
