@@ -50,7 +50,6 @@ Brief: Executes a query on the database with the provided user input.
 */
 const queryDatabase = (query, user_input) => 
 {
-    console.log(`Executing query: ${query} with input: ${user_input}`);
     return new Promise(async (res, rej) =>
     {
         const connection = await connectToDatabase();
@@ -58,7 +57,6 @@ const queryDatabase = (query, user_input) =>
         try
         {
             const jokes = await connection.execute(query, user_input);
-            console.log(jokes);
             res(jokes);
         }
         catch (error)

@@ -29,7 +29,6 @@ const getAllJokes = () =>
     .then(result => {
         const rows = result[0];
         rows.forEach(joke => jokes.add(joke));
-        console.log(`Loaded ${jokes.size} jokes from the database.`);
     }).catch(err => {
         console.error(`Error loading jokes from the database: ${err}`);
     });
@@ -123,7 +122,6 @@ app.get("/types", (req, res) =>
     {
         const rows = result[0];
         const typesList = rows.map(row => row.type_name);
-        console.log("Fetched types from database:", typesList);
         return res.json(typesList);
     })
     .catch(err => 
@@ -172,7 +170,6 @@ app.post("/submit", async (req, res) =>
         const newJoke = { id: newId, type_id, type_name: type, setup, punchline };
         jokes.add(newJoke);
         
-        console.log(`New joke added with ID: ${newId}`);
         return res.status(201).json(newJoke);
 
     } 
