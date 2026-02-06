@@ -1,0 +1,65 @@
+# Jokes Application Docker Containers 
+
+version: '3.8'
+
+services:
+  mysql_db:
+    image: mysql:8.0
+    container_name: jokes_mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/database.sql:/docker-entrypoint-initdb.d/database.sql
+    networks:
+      - joke_network
+    restart: unless-stopped
+
+  expressjs_backend:
+    build: ./expressjs
+    container_name: jokes_express
+    environment:
+      MYSQL_HOST: mysql_db
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_PORT: 3306
+      PORT: ${PORT}
+    ports:
+      - "3000:3000"
+    depends_on:
+      mysql_db:
+        condition: service_healthy
+    networks:
+      - joke_network
+    restart: unless-stopped
+
+  etl_app:
+    build: ./etl
+    container_name: jokes_etl
+    environment:
+      MYSQL_HOST: mysql_db
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_PORT: 3306
+      RABBITMQ_URL: ${RABBITMQ_URL}
+    depends_on:
+      mysql_db:
+        condition: service_healthy
+    networks:
+      - joke_network
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  joke_network:
+    driver: bridge

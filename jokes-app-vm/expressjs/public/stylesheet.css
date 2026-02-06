@@ -65,6 +65,56 @@ input[type="number"]:focus {
   box-shadow: 0 0 0 2px var(--accent);
 }
 
+select {
+  background: #2a2a33;
+  border: none;
+  color: var(--fg);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.8rem;
+  font-size: 1rem;
+  outline: none;
+  transition: box-shadow var(--transition);
+  cursor: pointer;
+}
+
+select:focus {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* ---------- CONTROLS ---------- */
+.controls {
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 2rem;
+}
+
+.control-group {
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.control-group label {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  font-size: 0.95rem;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+}
+
+.button-group button {
+  flex: 1;
+}
+
 /* ---------- BUTTON CONTAINER ---------- */
 .rbJokeButtons {
   display: flex;

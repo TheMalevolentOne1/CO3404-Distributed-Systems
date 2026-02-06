@@ -1,17 +1,26 @@
 require("dotenv").config();
 const mysql2 = require("mysql2/promise.js")
 
-const { DB_HOST, DB_USER, DB_PASSWORD, DB_DATABASE, DB_PORT } = process.env;
+// Load database connection details from environment variables
+const { MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE, MYSQL_PORT } = process.env;
 
+// Database connection configuration
 const connectionConfig =
 {
-    host: DB_HOST,
-    user: DB_USER,
-    password: DB_PASSWORD,
-    database: DB_DATABASE,
-    port: DB_PORT
+    host: MYSQL_HOST,
+    user: MYSQL_USER,
+    password: MYSQL_PASSWORD,
+    database: MYSQL_DATABASE,
+    port: MYSQL_PORT
 };
 
+/*
+Brief: Connects to MySQL Database using connectionConfig.
+
+@Returns: Connection Object
+@ReturnT: Promise<Connection>
+@ReturnF: Promise<Error>
+*/
 const connectToDatabase = () =>
 {
     return new Promise((res, rej) =>
@@ -29,6 +38,16 @@ const connectToDatabase = () =>
     });
 };
 
+/*
+Brief: Executes a query on the database with the provided user input.
+
+@Params1: query - The SQL query to execute, with placeholders for user input.
+@Params2: user_input - The user input to be safely inserted into the query.
+
+@Returns: Query Result
+@ReturnT: Promise<QueryResult>
+@ReturnF: Promise<Error>
+*/
 const queryDatabase = (query, user_input) => 
 {
     console.log(`Executing query: ${query} with input: ${user_input}`);
