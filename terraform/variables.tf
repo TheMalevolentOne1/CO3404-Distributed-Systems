@@ -80,6 +80,15 @@ variable "vm_spec" {
   })
 }
 
+variable "kong_vm" {
+  description = "Configuration for the Kong VM"
+  type = object({
+    name       = string
+    size       = string
+    admin_name = string
+  })
+}
+
 variable "disk_spec" {
   type = object({
     name         = string

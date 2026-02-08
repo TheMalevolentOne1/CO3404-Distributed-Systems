@@ -57,7 +57,7 @@ resource "azurerm_network_interface" "main"
   }
 }
 
-# Azure Network Security Group Configuration
+# Azure NSG Configuration
 resource "azurerm_network_security_group" "main" {
   name                = var.nsg_name
   location            = azurerm_resource_group.main.location
@@ -82,8 +82,8 @@ resource "azurerm_subnet_network_security_group_association" "main" {
   network_security_group_id = azurerm_network_security_group.main.id
 }
 
-# Azure Linux Virtual Machine Configuration
-resource "azurerm_linux_virtual_machine" "main-vm" 
+# Azure Linux Jokes Micro-Service Configuration
+resource "azurerm_linux_virtual_machine" "jokes-app-vm" 
 {
   name                = var.vm_spec.name
   resource_group_name = azurerm_resource_group.main.name
@@ -115,8 +115,102 @@ resource "azurerm_linux_virtual_machine" "main-vm"
   }
 }
 
+# Adding resources for submit-vm
+resource "azurerm_linux_virtual_machine" "submit_vm" {
+  name                = var.submit_vm.name
+  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.main.location
+  size                = var.vm_spec.size
+  admin_username      = var.vm_spec.admin-name
 
-# Azure Public IP Output Configuration
-output "PublicIP" {
-  value = azurerm_public_ip.main-pub-ip.ip_address
+  network_interface_ids = [azurerm_network_interface.submit_vm.id]
+
+  os_disk {
+    name                 = var.disk_spec.name
+    caching              = var.disk_spec.caching-type
+    storage_account_type = var.disk_spec.storage-type
+  }
+
+  source_image_reference {
+    publisher = var.OS_image.publisher
+    offer     = var.OS_image.offer
+    sku       = var.OS_image.sku
+    version   = var.OS_image.version
+  }
+
+  admin_ssh_key {
+    username = var.vm_spec.admin-name
+    public_key = var.pub_key
+  }
+}
+
+# Adding resources for jokes-app-vm
+resource "azurerm_linux_virtual_machine" "jokes_app_vm" {
+  name                = var.jokes_app_vm.name
+  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.main.location
+  size                = var.vm_spec.size
+  admin_username      = var.jokes_app_vm.admin_name
+
+  network_interface_ids = [azurerm_network_interface.jokes_app_vm.id]
+
+  os_disk {
+    name                 = var.disk_spec.name
+    caching              = var.disk_spec.caching-type
+    storage_account_type = var.disk_spec.storage-type
+  }
+
+  source_image_reference {
+    publisher = var.OS_image.publisher
+    offer     = var.OS_image.offer
+    sku       = var.OS_image.sku
+    version   = var.OS_image.version
+  }
+
+  admin_ssh_key {
+    username = var.vm_spec.admin-name
+    public_key = var.pub_key
+  }
+}
+
+# Adding resources for kong-vm
+resource "azurerm_linux_virtual_machine" "kong_vm" {
+  name                = var.kong_vm.name
+  resource_group_name = azurerm_resource_group.main.name
+  location            = azurerm_resource_group.main.location
+  size                = var.vm_spec.size
+  admin_username      = var.kong_vm.admin_name
+
+  network_interface_ids = [azurerm_network_interface.kong_vm.id]
+
+  os_disk {
+    name                 = var.disk_spec.name
+    caching              = var.disk_spec.caching-type
+    storage_account_type = var.disk_spec.storage-type
+  }
+
+  source_image_reference {
+    publisher = var.OS_image.publisher
+    offer     = var.OS_image.offer
+    sku       = var.OS_image.sku
+    version   = var.OS_image.version
+  }
+
+  admin_ssh_key {
+    username = var.vm_spec.admin-name
+    public_key = var.pub_key
+  }
+}
+
+# Output the public IPs of the VMs
+output "submit_vm_public_ip" {
+  value = azurerm_public_ip.submit_vm.ip_address
+}
+
+output "jokes_app_vm_public_ip" {
+  value = azurerm_public_ip.jokes_app_vm.ip_address
+}
+
+output "kong_vm_public_ip" {
+  value = azurerm_public_ip.kong_vm.ip_address
 }
