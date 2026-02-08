@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Submit a Joke</title>
+  <link rel="stylesheet" href="submit.css">
+</head>
+<body>
+  <h1>Submit a Joke</h1>
+  <form id="jokeForm">
+    <label for="setup">Setup:</label><br>
+    <input type="text" id="setup" name="setup" required><br><br>
+
+    <label for="punchline">Punchline:</label><br>
+    <input type="text" id="punchline" name="punchline" required><br><br>
+
+    <label for="type">Joke Type:</label><br>
+    <select id="type" name="type">
+      <!-- Options will be populated dynamically -->
+    </select>
+    <br><br>
+    <label for="newType">Or add a new type:</label><br>
+    <input type="text" id="newType" name="newType"><br><br>
+
+    <button type="submit">Submit Joke</button>
+  </form>
+  <div id="result"></div>
+  <script src="submit.js"></script>
+</body>
+</html>

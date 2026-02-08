@@ -2,8 +2,8 @@
   "name": "distributed-system-labs",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
-    "backend": "node backend.js"
+  "scripts": 
+  {
   },
   "keywords": [],
   "author": "",
