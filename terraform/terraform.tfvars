@@ -1,6 +1,7 @@
-subscription_id     = "" # ID
+subscription_id     = "afa9ccfd-d4c9-464f-a67f-1eaebce8feca" # ID
 resource_group_name = "rg-joke-assignment"
 region              = "UK South"
+pub_key             = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCyNMkZlnYP89dyqP2HxFd41GDjwd1D9NgYkgWiDcffkHO1jJd+pTcvTUeuywLJfZBHFs7o2PTT91YpcBGpG6hzNh16hwdUDtP0B+9/bnVmH6R18Inj38GQPTkgRnPzNk8Np0VQ0+1ISUoCR9tMV2kOaluOT3+o/8CEETHRqh++qItiGi5MSN3Q9KGCaMkSlSbL2GOiW53KmvNTtvwQbRCMQUmkwcsq/XnYV4P0KywQvaXpy37su0vWTFFPg21vV1+049oRAwHveas+/ejRtgfpvMxQ/mO+B8I3fpoAnJvNk+rr4IRpUsJvkfhdXu4xIVbNeZSB+opZGygXWc7Cq5433e355cVUmMm69dJVRI/SOWrWfi/PJyiyTMh9fDwFY8ZcHnWlUoSVf5BG4FT69IXJsrclK8BUHwMz6hJR9551Na0FJ2tnHULKssMwAVIYUocFfamcpBOv2ExquI/OBp5Jjgv4p0vC+YUCVJStqUc7mFBr4vZ9hJTgRB+n33r6W4cAUyeeK8UK61M7p4YCdTRLUQMR3EuLv/Ijf351+3w00At6YAK+NpeLxgy1P4fyLHTJIZRLNfd+qwuDy13XEyHANldgW+Ucoh+y4xc44dCEq2SQLoAvlytpBrgZ39q3puhWFmKLh0P3FKqCMxxz4B5sBnIZPjNhe+0m5lN66jln0w== madph@Kyles-Laptop"
 
 vnet = {
   name = "vnet-joke-network"
@@ -58,5 +59,3 @@ security_rule = {
     "3306"   # MySQL - Workbench access for demo
   ]
 }
-
-pub_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQD0U3uCcCsl4ARiqgeKAltLmc1EZrw9r6teD+yR70lKthGQxHvgJJeKDlsCfFOCk8h9z9BFTRw1XJOfG1aj0pRSGCzDLCyeDELKODYdsJ3HAXBQy4lpvOxwPwhKtsn6ZKRT82I1p8yRx1Uf1AJO6xpBKCaM2FLVuqUwK2uWRDoscJ6cVilDCbpXWD1kfgBojdBHt/wN3Mo3rMQ+G7dPXWMic/XMgAdl3flCHur5/UCrISS9Rzu1auD30vRYkzhLYrOTggkDNc+6jPr/OAexMhKuCleUgVNaGOBgTsURqtcjtfoOL/5WypSsw+HvhJJpHzjB+kjQiChSM2AGUVLhwX6JTNvyH2Ew7guDAmsN/KwqXy3XvFF4qk2F/pFl9v5Z2esjt+GCoh/DalrWqjCVT75a/aF9y7ImzHPkqi8ShS4iWg/rDnOUE4UEG2IH9284jeH4qhmrRwcl1JybiePqv+KJiVjGziEmRJ7Ukx/q7ZBCOtZtLkQO2dL6Fa6H9zNCOy0= generated-by-azure"

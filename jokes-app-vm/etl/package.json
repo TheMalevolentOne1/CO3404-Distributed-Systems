@@ -1,5 +1,5 @@
 {
-  "name": "etl-worker",
+  "name": "etl",
   "version": "1.0.0",
   "main": "etl.js",
   "dependencies": {

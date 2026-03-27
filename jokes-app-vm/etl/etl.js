@@ -1,16 +1,13 @@
 const express = require('express');
 const amqp = require('amqplib');
-const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
 app.use(express.json());
-app.use(cors())
 
 const PORT = process.env.ETL_PORT || 3002;
 const DB_TYPE = process.env.DB_TYPE || 'MYSQL';
-const MYSQL_MODULE = process.env.MYSQL_MODULE || './mysql-database-fns';
-const MONGO_MODULE = process.env.MONGO_MODULE || './mongo-database-fns';
+const MYSQL_MODULE = process.env.MYSQL_MODULE
 const RMQ_HOST = process.env.RMQ_HOST || 'localhost';
 const QUEUE_NAME = process.env.QUEUE_NAME || 'jokes-queue';
 
@@ -84,27 +81,8 @@ async function insertJoke(payload) {
   }
 }
 
-// Continuous message listener
-async function startMsgListener(channel, queue) {
-  console.log(`Listening for messages on queue: ${queue}`);
-  
-  channel.consume(queue, async (msg) => {
-    if (msg) {
-      try {
-        const content = JSON.parse(msg.content.toString());
-        console.log('Received message:', content);
-        await insertJoke(content);
-        channel.ack(msg);
-      } catch (err) {
-        console.error('Error processing message:', err.message);
-        channel.nack(msg, false, true); // Requeue on error
-      }
-    }
-  });
-}
-
 // Connect to RabbitMQ and start consuming
-async function connectRabbitMQ() {
+const connectRabbitMQ = async () => {
   try {
     const rmqURL = `amqp://guest:guest@${RMQ_HOST}:5672`;
     gConnection = await amqp.connect(rmqURL);
@@ -114,9 +92,6 @@ async function connectRabbitMQ() {
     console.log(`Connected to RabbitMQ at ${RMQ_HOST}`);
     console.log(`Queue "${QUEUE_NAME}" ready`);
     
-    // Uncomment to enable continuous listening, or use /process-message endpoint for manual processing
-    // startMsgListener(gChannel, QUEUE_NAME);
-    
   } catch (err) {
     console.error(`Failed to connect to RabbitMQ: ${err.message}`);
     console.log('Retrying in 5 seconds...');
@@ -124,14 +99,19 @@ async function connectRabbitMQ() {
   }
 }
 
-// Verify database connection
-async function checkDbConnected() {
+// Verify database connection with retry (Docker starting DB before ETL)
+const checkDbConnected = async (attempt = 1) => {
   try {
     const dbName = await db.isConnected();
-    console.log(`✓ Connected to ${DB_TYPE}: ${dbName}`);
+    console.log(`Connected to ${DB_TYPE}: ${dbName}`);
   } catch (err) {
-    console.error(`Failed to connect to database: ${err.message}`);
-    process.exit(1);
+    if (attempt < 10) {
+      console.error(`Failed to connect to database (attempt ${attempt}/10): ${err.message}`);
+      setTimeout(() => checkDbConnected(attempt + 1), 3000);
+    } else {
+      console.error(`Failed to connect to database after 10 attempts. Exiting.`);
+      process.exit(1);
+    }
   }
 }
 

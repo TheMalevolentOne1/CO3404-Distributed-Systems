@@ -2,7 +2,8 @@ const mysql = require('mysql2/promise');
 
 let pool;
 
-function createConPool() {
+
+const createConnectionPool = () => {
   const connectionObj = {
     host: process.env.HOST_NAME || 'localhost',
     user: process.env.USER_NAME || 'admin',
@@ -17,7 +18,7 @@ function createConPool() {
   pool = mysql.createPool(connectionObj);
 }
 
-async function isConnected() {
+const isConnected = async () => {
   try {
     const [result] = await queryDatabase('SELECT DATABASE() AS CurrentDatabase');
     return result.CurrentDatabase;
@@ -27,7 +28,7 @@ async function isConnected() {
   }
 }
 
-async function queryDatabase(query, params = []) {
+const queryDatabase = async (query, params = []) => {
   let connection;
   try {
     connection = await pool.getConnection();
@@ -41,7 +42,7 @@ async function queryDatabase(query, params = []) {
 }
 
 // Insert joke with type handling
-async function insertJoke(setup, punchline, typeName) {
+const insertJoke = async (setup, punchline, typeName) => {
   try {
     let typeId;
 
@@ -73,12 +74,12 @@ async function insertJoke(setup, punchline, typeName) {
   }
 }
 
-async function getJokeTypes() {
+const getJokeTypes = async () => {
   const sql = 'SELECT DISTINCT type_name FROM types ORDER BY type_name';
   return await queryDatabase(sql);
 }
 
-createConPool();
+createConnectionPool();
 
 module.exports = {
   isConnected,

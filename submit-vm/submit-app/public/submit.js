@@ -1,5 +1,4 @@
 // submit.js - Handles form and API for submit.html
-
 document.addEventListener('DOMContentLoaded', () => {
   const typeSelect = document.getElementById('type');
   const form = document.getElementById('jokeForm');

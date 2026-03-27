@@ -1,15 +1,13 @@
-const database = require('./database.js');
 require('dotenv').config(); // Load environment variables from .env file
 
 const express = require("express");
-const cors = require("cors");
 const fs = require("fs");
+const database = require("./database.js");
 
 const app = express();
 const PORT = process.env.PORT;;
 
 app.use(express.json()) // For parsing application/json
-app.use(cors()); // Enable CORS for all routes (HTTP Header: Access-Control-Allow-Origin: *) cross port communication.
 app.use(express.static('public')); // Serve static files from 'public' directory
 
 app.listen(PORT, () => 

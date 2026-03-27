@@ -7,7 +7,23 @@ const PORT = process.env.PORT || 3002;
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
-let jokeTypes = function() { fetch('http://localhost:3001/types').then(res => res.json()) }(); // Fetch types from jokes app on startup
+let jokeTypes = [];
+
+// Fetch types from jokes app on startup
+async function fetchAndCacheTypes() {
+  try {
+    const response = await fetch('http://joke_app:3000/types');
+    if (response.ok) {
+      jokeTypes = await response.json();
+    } else {
+      console.error('Failed to fetch types on startup');
+    }
+  } catch (err) {
+    console.error('Error fetching types on startup:', err.message);
+  }
+}
+
+fetchAndCacheTypes();
 
 // GET /types - return all joke types
 app.get('/types', (req, res) => 
