@@ -1,0 +1,14 @@
+{
+  "name": "submit-microservice",
+  "version": "1.0.0",
+  "description": "CO3404 Submit Microservice for joke submissions",
+  "main": "backend.js",
+  "scripts": {
+    "start": "node backend.js"
+  },
+  "dependencies": {
+    "amqplib": "^0.10.3",
+    "dotenv": "^17.2.2",
+    "express": "^4.18.2"
+  }
+}

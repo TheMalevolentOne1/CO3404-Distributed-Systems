@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  # Submit Microservice
+  # Fetches types from jokes-vm and publishes to local RabbitMQ
+  submit_app:
+    build: ./submit-app
+    container_name: submit_app
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      QUEUE_NAME: jokes-queue
+      TYPES_CACHE_FILE: /cache/types-cache.json
+      JOKE_SERVICE_URL: http://10.0.1.4:3000
+      RMQ_HOST: localhost
+    volumes:
+      - types_cache:/cache
+    depends_on:
+      - rabbitmq
+    networks:
+      - submit_network
+
+  # RabbitMQ Message Broker
+  rabbitmq:
+    image: rabbitmq:3.12-management-alpine
+    container_name: rabbitmq_submit
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - submit_network
+
+volumes:
+  types_cache:
+  rabbitmq_data:
+
+networks:
+  submit_network:
+    driver: bridge

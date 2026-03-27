@@ -1,0 +1,11 @@
+{
+  "name": "etl-worker",
+  "version": "1.0.0",
+  "main": "etl.js",
+  "dependencies": {
+    "amqplib": "^0.10.3",
+    "dotenv": "^17.2.2",
+    "express": "^4.18.2",
+    "mysql2": "^3.6.0"
+  }
+}

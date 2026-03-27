@@ -1,0 +1,102 @@
+version: '3.8'
+
+services:  
+  # MySQL Database (Jokes-VM)
+  joke_db:
+    image: mysql:8.0
+    container_name: joke_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: jokes_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./jokes-app-vm/database/database.sql:/docker-entrypoint-initdb.d/database.sql
+    networks:
+      - core_network
+
+  # Joke Application (Jokes-VM)
+  joke_app:
+    build: ./jokes-app-vm/expressjs
+    container_name: joke_app
+    ports:
+      - "3000:3000"
+    environment:
+      MYSQL_HOST: joke_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+      MYSQL_DATABASE: jokes_db
+      MYSQL_PORT: 3306
+      PORT: 3000
+    depends_on:
+      - joke_db
+    networks:
+      - core_network
+
+  # ETL Consumer (Jokes-VM)
+  etl:
+    build: ./jokes-app-vm/etl
+    container_name: etl
+    ports:
+      - "3002:3002"
+    environment:
+      ETL_PORT: 3002
+      DB_TYPE: MYSQL
+      HOST_NAME: joke_db
+      USER_NAME: admin
+      PASSWORD: admin
+      DATABASE: jokes_db
+      MYSQL_PORT: 3306
+      RMQ_HOST: rabbitmq
+      QUEUE_NAME: jokes-queue
+    depends_on:
+      - joke_db
+      - rabbitmq
+    networks:
+      - core_network
+
+  # RabbitMQ Message Broker (Submit-VM)
+  rabbitmq:
+    image: rabbitmq:3.12-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - core_network
+
+  # Submit Application (Submit-VM)
+  submit_app:
+    build: ./submit-vm/submit-app
+    container_name: submit_app
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      QUEUE_NAME: jokes-queue
+      TYPES_CACHE_FILE: /cache/types-cache.json
+      JOKE_SERVICE_URL: http://joke_app:3000
+      RMQ_HOST: rabbitmq
+    volumes:
+      - types_cache:/cache
+    depends_on:
+      - rabbitmq
+    networks:
+      - core_network
+
+volumes:
+  db_data:
+  rabbitmq_data:
+  types_cache:
+
+networks:
+  core_network:
+    driver: bridge

@@ -17,5 +17,3 @@ CREATE TABLE jokes (
     FOREIGN KEY (type_id) REFERENCES types(id) ON DELETE CASCADE,
     INDEX id_type_id (type_id)
 );
-
-SELECT * FROM types JOIN jokes ON types.id = jokes.type_id;

@@ -1,16 +1,16 @@
 const LOWEST_JOKE_AMOUNT = 1;
 const HIGHEST_JOKE_AMOUNT = 100;
 
-const BASE_URL = `http://localhost:3000`; // Base URL for API calls
+const BASE_URL = `http://10.0.1.4:3000`; // Base URL for API calls
 const JOKES_API = `${BASE_URL}/joke`; // Endpoint for jokes API
 const TYPES_API = `${BASE_URL}/types`; // Endpoint for joke types API
 
-let answerField; // Global variable to store answer field element
-let numberInput; // Global variable to store number input element
-let typeSelect;  // Global variable to store type select element
-let getJokeBtn; // Global variable to store get joke button element
-let allJokesBtn; // Global variable to store get all jokes button element
-let clearBtn; // Global variable to store clear button element
+let answerField; 
+let numberInput; 
+let typeSelect;  
+let getJokeBtn; 
+let allJokesBtn;
+let clearBtn;
 
 /* 
 Brief: Makes an HTTP GET request to the specified endpoint and returns the parsed JSON data.

@@ -6,15 +6,15 @@ services:
     image: mysql:8.0
     container_name: joke_db
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: jokes_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
     ports:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
-      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/database.sql:/docker-entrypoint-initdb.d/database.sql
     networks:
       - joke_network
 
@@ -25,23 +25,37 @@ services:
     ports:
       - "3000:3000"
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_HOST: joke_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+      MYSQL_DATABASE: jokes_db
       MYSQL_PORT: 3306
-      EXPRESS_PORT: 3000
+      PORT: 3000
+    depends_on:
+      - joke_db
     networks:
       - joke_network
 
-  rabbitmq:
-  image: rabbitmq:3-management
-  container_name: rabbitmq
-  ports:
-    - "5672:5672"
-    - "15672:15672"
-  networks:
-    - joke_network
+  # ETL Consumer Worker
+  etl:
+    build: ./etl
+    container_name: etl
+    ports:
+      - "3002:3002"
+    environment:
+      ETL_PORT: 3002
+      DB_TYPE: MYSQL
+      HOST_NAME: joke_db
+      USER_NAME: admin
+      PASSWORD: admin
+      DATABASE: jokes_db
+      MYSQL_PORT: 3306
+      RMQ_HOST: 10.0.1.5
+      QUEUE_NAME: jokes-queue
+    depends_on:
+      - joke_db
+    networks:
+      - joke_network
 
 volumes:
   db_data:

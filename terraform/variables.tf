@@ -1,4 +1,4 @@
-variable "subscription" 
+variable "subscription_id" 
 {
   type        = string
   description = "User subscription ID"
@@ -34,16 +34,12 @@ variable "subnet" {
   })
 }
 
-variable "publicIP" {
+# Shared public IP settings used by both VM public IP resources
+variable "public_ip" {
   type = object({
-    name = string
-    type = string
-    sku  = string
+    allocation_method = string
+    sku               = string
   })
-}
-
-variable "NIC_name" {
-  type = string
 }
 
 variable "ip_config_name" {
@@ -63,7 +59,6 @@ variable "nsg_name" {
   description = "Network security group name"
 }
 
-
 variable "security_rule" {
   type = object({
     name          = string
@@ -72,16 +67,16 @@ variable "security_rule" {
   })
 }
 
-variable "vm_spec" {
+# Jokes VM spec - separate from submit_vm as it requires a larger size (B2s)
+variable "jokes_vm" {
   type = object({
     name       = string
     size       = string
-    admin-name = string
+    admin_name = string
   })
 }
 
-variable "kong_vm" {
-  description = "Configuration for the Kong VM"
+variable "submit_vm" {
   type = object({
     name       = string
     size       = string
@@ -91,13 +86,12 @@ variable "kong_vm" {
 
 variable "disk_spec" {
   type = object({
-    name         = string
-    caching-type = string
-    storage-type = string
+    caching_type = string
+    storage_type = string
   })
 }
 
-variable "OS_image" {
+variable "os_image" {
   type = object({
     publisher = string
     offer     = string
